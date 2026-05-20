@@ -1,0 +1,15 @@
+enum ServerState {
+    DISCONNECTED = 'DISCONNECTED',
+    DEFUNCT = 'DEFUNCT',
+    CONNECTED = 'CONNECTED', // v1–v5.0
+    NEGOTIATION = 'NEGOTIATION', // v5.1+ (renamed from CONNECTED)
+    AUTHENTICATION = 'AUTHENTICATION', // v5.1+: state between HELLO and LOGON
+    READY = 'READY',
+    STREAMING = 'STREAMING',
+    TX_READY = 'TX_READY',
+    TX_STREAMING = 'TX_STREAMING',
+    FAILED = 'FAILED',
+    INTERRUPTED = 'INTERRUPTED',
+}
+
+export default ServerState;
