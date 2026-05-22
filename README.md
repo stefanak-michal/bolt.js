@@ -1,4 +1,4 @@
-# bolt.js
+# Bolt protocol js driver
 
 JavaScript/TypeScript library for communication with graph databases over WebSocket using the Bolt protocol specification. Bolt protocol was created by [Neo4j](https://neo4j.com/) and documentation is available at [https://www.neo4j.com/docs/bolt/current/](https://www.neo4j.com/docs/bolt/current/). This library is aimed to be low level, support all available versions and keep up with protocol messages architecture and specifications.
 

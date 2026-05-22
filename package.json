@@ -1,5 +1,5 @@
 {
-  "name": "bolt.js",
+  "name": "@stefanak-michal/bolt-protocol",
   "version": "1.0.0",
   "description": "Low-level JavaScript/TypeScript Bolt protocol driver for Neo4j and other Bolt-compatible graph databases",
   "homepage": "https://github.com/stefanak-michal/bolt.js",
