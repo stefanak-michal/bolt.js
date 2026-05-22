@@ -26,8 +26,15 @@ This library supports **Bolt <= 6**.
 
 ## :floppy_disk: Installation
 
+Within your node.js project use following command:
 ```bash
 npm install @stefanak-michal/bolt-protocol
+```
+
+Or in your website include following code:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@stefanak-michal/bolt-protocol@1"></script>
 ```
 
 ## :desktop_computer: Usage
