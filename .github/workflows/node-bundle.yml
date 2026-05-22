@@ -3,7 +3,7 @@ name: Node bundle test
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   node-bundle-test:

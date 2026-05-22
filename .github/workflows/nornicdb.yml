@@ -3,7 +3,7 @@ name: Client test with NornicDB
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   nornicdb-tests:

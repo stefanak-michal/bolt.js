@@ -3,7 +3,7 @@ name: Tests with Neo4j
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   neo4j-tests:

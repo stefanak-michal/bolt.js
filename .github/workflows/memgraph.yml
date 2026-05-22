@@ -3,7 +3,7 @@ name: Client test with Memgraph
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   memgraph-tests:
@@ -33,6 +33,6 @@ jobs:
           BOLT_HOST: localhost
           BOLT_PORT: 7687
           BOLT_AUTH_SCHEME: none
-          BOLT_USER: ""
-          BOLT_PASSWORD: ""
+          BOLT_USER: ''
+          BOLT_PASSWORD: ''
         run: npx jest ./tests/helpers/Client.test.ts
