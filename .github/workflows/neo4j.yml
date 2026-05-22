@@ -1,0 +1,44 @@
+name: Tests with Neo4j
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [ master ]
+
+jobs:
+  neo4j-tests:
+    if: ${{ github.event.pull_request.draft == false }}
+    runs-on: ubuntu-latest
+    name: Run Jest tests
+
+    services:
+      neo4j:
+        image: neo4j
+        env:
+          NEO4J_AUTH: neo4j/nothing123
+        ports:
+          - 7687:7687
+          - 7474:7474
+        options: >-
+          --health-cmd "wget http://localhost:7474 || exit 1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 'lts/*'
+
+      - name: npm install
+        run: npm ci
+
+      - name: jest run test
+        env:
+          BOLT_HOST: localhost
+          BOLT_PORT: 7687
+          BOLT_AUTH_SCHEME: basic
+          BOLT_USER: neo4j
+          BOLT_PASSWORD: nothing123
+        run: npm run test

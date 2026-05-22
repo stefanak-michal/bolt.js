@@ -6,7 +6,7 @@ export interface PullExtra {
     qid?: number;
 }
 
-export function WithPull(this: AProtocol, extra: PullExtra = {}): AProtocol {
+export function WithPull(this: AProtocol, extra: PullExtra = {} as PullExtra): AProtocol {
     if (extra.n === undefined) extra = { ...extra, n: -1 };
     this.send(Message.PULL, [extra]);
     return this;

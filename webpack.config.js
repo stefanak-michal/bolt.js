@@ -42,7 +42,6 @@ module.exports = {
         filename: 'bolt.js',
         path: path.resolve(__dirname, 'dist'),
         library: 'BoltDriver',
-        libraryExport: 'default',
         libraryTarget: 'umd',
         globalObject: 'this',
     },

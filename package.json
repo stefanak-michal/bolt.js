@@ -6,7 +6,8 @@
   "types": "dist/bolt.d.ts",
   "scripts": {
     "build": "webpack --mode production",
-    "test": "jest ./test",
+    "test": "jest --config jest.config.js",
+    "test:bundle": "jest --config jest.bundle.config.js",
     "format": "prettier --write ."
   },
   "keywords": [
@@ -18,6 +19,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@playwright/test": "^1.49.0",
     "@jest/globals": "^30.4.1",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.14.0",

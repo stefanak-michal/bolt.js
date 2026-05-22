@@ -1,0 +1,43 @@
+name: Client test with ArcadeDB
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [ master ]
+
+jobs:
+  arcadedb-tests:
+    if: ${{ github.event.pull_request.draft == false }}
+    runs-on: ubuntu-latest
+    name: Run Jest tests
+
+    services:
+      arcadedb:
+        image: arcadedata/arcadedb
+        ports:
+          - 7687:7687
+          - 2480:2480
+          - 2424:2424
+        env:
+            JAVA_OPTS: '-Darcadedb.server.rootPassword=playwithdata -Darcadedb.server.plugins=Bolt:com.arcadedb.bolt.BoltProtocolPlugin -Darcadedb.server.defaultDatabases=mydatabase[]'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 'lts/*'
+
+      - name: npm install
+        run: npm ci
+
+      - name: jest run test
+        env:
+          BOLT_HOST: localhost
+          BOLT_PORT: 7687
+          BOLT_AUTH_SCHEME: basic
+          BOLT_USER: root
+          BOLT_PASSWORD: playwithdata
+        run: npx jest ./tests/helpers/Client.test.ts

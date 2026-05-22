@@ -31,4 +31,3 @@ export { default as ServerState } from './enum/ServerState';
 
 // High-level helper
 export { Client, Transaction } from './helpers/Client';
-export type { TransactionOptions } from './helpers/Client';

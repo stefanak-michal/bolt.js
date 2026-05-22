@@ -1,0 +1,38 @@
+name: Client test with Memgraph
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [ master ]
+
+jobs:
+  memgraph-tests:
+    if: ${{ github.event.pull_request.draft == false }}
+    runs-on: ubuntu-latest
+    name: Run Jest tests
+
+    services:
+      memgraph:
+        image: memgraph/memgraph
+        ports:
+          - 7687:7687
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 'lts/*'
+
+      - name: npm install
+        run: npm ci
+
+      - name: jest run test
+        env:
+          BOLT_HOST: localhost
+          BOLT_PORT: 7687
+          BOLT_AUTH_SCHEME: none
+          BOLT_USER: ""
+          BOLT_PASSWORD: ""
+        run: npx jest ./tests/helpers/Client.test.ts

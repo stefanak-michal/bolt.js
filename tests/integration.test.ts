@@ -8,7 +8,6 @@ const HOST = 'localhost';
 const PORT = 7687;
 const USER = 'neo4j';
 const PASS = 'nothing123';
-const USER_AGENT = 'js-bolt-driver-test/0.1';
 
 jest.setTimeout(15000);
 
