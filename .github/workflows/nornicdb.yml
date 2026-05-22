@@ -7,7 +7,8 @@ on:
 
 jobs:
   nornicdb-tests:
-    if: ${{ github.event.pull_request.draft == false }}
+    # Temporarily disable the workflow until NornicDB add websocket support
+    if: false
     runs-on: ubuntu-latest
     name: Run Jest tests
 
