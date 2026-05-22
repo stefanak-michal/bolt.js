@@ -1,33 +1,33 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>Bolt Driver Browser Test</title>
-</head>
-<body>
-<script src="../../dist/bolt.js"></script>
-<script>
-(async function () {
-    const params = new URLSearchParams(location.search);
-    const host = params.get('host') || 'localhost';
-    const port = parseInt(params.get('port') || '7687', 10);
-    const user = params.get('user') || 'neo4j';
-    const password = params.get('password') || '';
-    const scheme = params.get('scheme') || 'basic';
+    <head>
+        <meta charset="utf-8" />
+        <title>Bolt Driver Browser Test</title>
+    </head>
+    <body>
+        <script src="../../dist/bolt.js"></script>
+        <script>
+            (async function () {
+                const params = new URLSearchParams(location.search);
+                const host = params.get('host') || 'localhost';
+                const port = parseInt(params.get('port') || '7687', 10);
+                const user = params.get('user') || 'neo4j';
+                const password = params.get('password') || '';
+                const scheme = params.get('scheme') || 'basic';
 
-    try {
-        const { Bolt, WebSocketChannel, Client } = BoltDriver;
-        const conn = new WebSocketChannel();
-        const protocol = await Bolt.connect(conn, host, port);
-        const client = new Client(protocol);
-        await client.login({ scheme, principal: user, credentials: password });
-        const records = await client.query('RETURN 1 AS num');
-        conn.disconnect();
-        window.__testResult = { success: true, records };
-    } catch (e) {
-        window.__testResult = { success: false, error: e.message || String(e) };
-    }
-})();
-</script>
-</body>
+                try {
+                    const { Bolt, WebSocketChannel, Client } = BoltDriver;
+                    const conn = new WebSocketChannel();
+                    const protocol = await Bolt.connect(conn, host, port);
+                    const client = new Client(protocol);
+                    await client.login({ scheme, principal: user, credentials: password });
+                    const records = await client.query('RETURN 1 AS num');
+                    conn.disconnect();
+                    window.__testResult = { success: true, records };
+                } catch (e) {
+                    window.__testResult = { success: false, error: e.message || String(e) };
+                }
+            })();
+        </script>
+    </body>
 </html>
