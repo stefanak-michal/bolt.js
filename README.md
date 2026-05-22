@@ -27,7 +27,7 @@ This library supports **Bolt <= 6**.
 ## :floppy_disk: Installation
 
 ```bash
-npm install js-bolt-driver
+npm install @stefanak-michal/bolt-protocol
 ```
 
 ## :desktop_computer: Usage
