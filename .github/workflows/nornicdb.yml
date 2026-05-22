@@ -37,6 +37,7 @@ jobs:
           BOLT_HOST: localhost
           BOLT_PORT: 7687
           BOLT_AUTH_SCHEME: none
-          BOLT_USER: ""
-          BOLT_PASSWORD: ""
+          BOLT_USER: ''
+          BOLT_PASSWORD: ''
+          BOLT_VERSION: '4.4.4'
         run: npx jest ./tests/helpers/Client.test.ts

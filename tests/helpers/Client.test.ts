@@ -10,6 +10,7 @@ const AUTH = {
     principal: process.env.BOLT_USER ?? 'neo4j',
     credentials: process.env.BOLT_PASSWORD ?? 'nothing123',
 };
+const VERSION = process.env.BOLT_VERSION ?? null;
 
 jest.setTimeout(15000);
 
@@ -19,6 +20,10 @@ describe('Client', () => {
 
     beforeEach(async () => {
         conn = new WebSocketChannel();
+        if (VERSION) {
+            const [major, minor = 0, range = 0] = VERSION.split('.').map(Number);
+            Bolt.versions = [{ major, minor, range }];
+        }
         const protocol = await Bolt.connect(conn, HOST, PORT);
         client = new Client(protocol);
         await client.login(AUTH);
