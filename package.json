@@ -1,23 +1,47 @@
 {
-  "name": "js-bolt-driver",
-  "version": "0.1.0",
+  "name": "bolt.js",
+  "version": "1.0.0",
   "description": "Low-level JavaScript/TypeScript Bolt protocol driver for Neo4j and other Bolt-compatible graph databases",
+  "homepage": "https://github.com/stefanak-michal/bolt.js",
   "main": "dist/bolt.js",
   "types": "dist/bolt.d.ts",
+  "private": false,
   "scripts": {
     "build": "webpack --mode production",
     "test": "jest --config jest.config.js",
     "test:bundle": "jest --config jest.bundle.config.js",
     "format": "prettier --write ."
   },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
   "keywords": [
     "neo4j",
     "bolt",
     "graph",
     "database",
-    "driver"
+    "driver",
+    "javascript",
+    "typescript",
+    "websocket"
   ],
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stefanak-michal/bolt.js.git"
+  },
+  "funding": [
+    {
+      "type": "ko-fi",
+      "url": "https://ko-fi.com/michalstefanak"
+    },
+    {
+      "type": "github sponsors",
+      "url": "https://github.com/sponsors/stefanak-michal"
+    }
+  ],
+  "license": "Apache-2.0",
   "devDependencies": {
     "@playwright/test": "^1.49.0",
     "@jest/globals": "^30.4.1",

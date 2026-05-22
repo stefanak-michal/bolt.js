@@ -32,11 +32,9 @@ export class Transaction {
 export class Client {
     private authenticated = false;
 
-    constructor(
-        private protocol: AProtocol,
-    ) {}
+    constructor(private protocol: AProtocol) {}
 
-    async login(auth: AuthToken): Promise<Response|Response[]|void> {
+    async login(auth: AuthToken): Promise<Response | Response[] | void> {
         if (this.authenticated) return;
         this.authenticated = true;
 
@@ -49,7 +47,7 @@ export class Client {
             proto.logon(auth);
             const logonResp = await this.protocol.getResponse();
             if (logonResp.isFailure) await reset(this.protocol, `LOGON failed: ${JSON.stringify(logonResp.content)}`);
-            return [ helloResp, logonResp ];
+            return [helloResp, logonResp];
         } else if (typeof proto.hello === 'function') {
             proto.hello({ auth_token: auth });
             const helloResp = await this.protocol.getResponse();
@@ -70,7 +68,8 @@ export class Client {
         if (typeof proto.logoff === 'function') {
             proto.logoff();
             const logoffResp = await this.protocol.getResponse();
-            if (logoffResp.isFailure) await reset(this.protocol, `LOGOFF failed: ${JSON.stringify(logoffResp.content)}`);
+            if (logoffResp.isFailure)
+                await reset(this.protocol, `LOGOFF failed: ${JSON.stringify(logoffResp.content)}`);
             return logoffResp;
         }
         throw new Error('Protocol does not support LOGOFF');
