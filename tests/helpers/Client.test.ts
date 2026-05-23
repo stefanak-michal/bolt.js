@@ -1,6 +1,6 @@
 import { Bolt } from '../../src/Bolt';
 import { WebSocketChannel } from '../../src/connection/WebSocketChannel';
-import { Client, Transaction } from '../../src/helpers/Client';
+import { Client } from '../../src/helpers/Client';
 import { jest, expect, describe, test, beforeEach, afterEach } from '@jest/globals';
 
 const HOST = process.env.BOLT_HOST ?? 'localhost';
@@ -61,52 +61,40 @@ describe('Client', () => {
     });
 
     describe('beginTransaction()', () => {
-        test('returns a Transaction instance', async () => {
-            const tx = await client.beginTransaction();
-            expect(tx).toBeInstanceOf(Transaction);
-            await tx.rollback();
+        test('returns a successful response', async () => {
+            const resp = await client.beginTransaction();
+            expect(resp.isSuccess).toBe(true);
+            await client.rollback();
         });
 
-        describe('Transaction.run()', () => {
+        describe('query() inside transaction', () => {
             test('returns records inside a transaction', async () => {
-                const tx = await client.beginTransaction();
-                const records = await tx.run('RETURN 2 AS val');
+                await client.beginTransaction();
+                const records = await client.query('RETURN 2 AS val');
                 expect(records).toEqual([{ val: 2 }]);
-                await tx.rollback();
+                await client.rollback();
             });
 
             test('supports parameters inside a transaction', async () => {
-                const tx = await client.beginTransaction();
-                const records = await tx.run('RETURN $n AS num', { n: 99 });
+                await client.beginTransaction();
+                const records = await client.query('RETURN $n AS num', { n: 99 });
                 expect(records).toEqual([{ num: 99 }]);
-                await tx.rollback();
-            });
-
-            test('throws after commit', async () => {
-                const tx = await client.beginTransaction();
-                await tx.commit();
-                await expect(tx.run('RETURN 1')).rejects.toThrow('Transaction already finished');
-            });
-
-            test('throws after rollback', async () => {
-                const tx = await client.beginTransaction();
-                await tx.rollback();
-                await expect(tx.run('RETURN 1')).rejects.toThrow('Transaction already finished');
+                await client.rollback();
             });
         });
 
-        describe('Transaction.commit()', () => {
+        describe('commit()', () => {
             test('returns a successful response', async () => {
-                const tx = await client.beginTransaction();
-                const resp = await tx.commit();
+                await client.beginTransaction();
+                const resp = await client.commit();
                 expect(resp.isSuccess).toBe(true);
             });
 
             test('committed writes are visible after commit', async () => {
                 const label = `ClientTestNode_${Date.now()}`;
-                const tx = await client.beginTransaction();
-                await tx.run(`CREATE (:${label} {ok: true})`);
-                await tx.commit();
+                await client.beginTransaction();
+                await client.query(`CREATE (:${label} {ok: true})`);
+                await client.commit();
 
                 try {
                     const records = await client.query(`MATCH (n:${label}) RETURN n.ok AS ok`);
@@ -117,18 +105,18 @@ describe('Client', () => {
             });
         });
 
-        describe('Transaction.rollback()', () => {
+        describe('rollback()', () => {
             test('returns a successful response', async () => {
-                const tx = await client.beginTransaction();
-                const resp = await tx.rollback();
+                await client.beginTransaction();
+                const resp = await client.rollback();
                 expect(resp.isSuccess).toBe(true);
             });
 
             test('rolled-back writes are not persisted', async () => {
                 const label = `ClientTestNode_${Date.now()}`;
-                const tx = await client.beginTransaction();
-                await tx.run(`CREATE (:${label})`);
-                await tx.rollback();
+                await client.beginTransaction();
+                await client.query(`CREATE (:${label})`);
+                await client.rollback();
 
                 const records = await client.query(`MATCH (n:${label}) RETURN n`);
                 expect(records).toEqual([]);

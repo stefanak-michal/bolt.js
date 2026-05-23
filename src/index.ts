@@ -30,4 +30,4 @@ export { default as Message } from './enum/Message';
 export { default as ServerState } from './enum/ServerState';
 
 // High-level helper
-export { Client, Transaction } from './helpers/Client';
+export { Client } from './helpers/Client';

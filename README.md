@@ -162,15 +162,9 @@ new Client(protocol: AProtocol)
 | `login(auth: AuthToken)`             | Authenticate. Automatically adapts to the protocol version. | `Promise<Response \| Response[] \| void>` |
 | `logout()`                           | Log out (Bolt 5.1+).                                        | `Promise<Response>`                       |
 | `query(cypher, parameters?, extra?)` | Execute a query and return all rows as arrays of values.    | `Promise<Record<string, unknown>[]>`      |
-| `beginTransaction(extra?)`           | Begin a transaction and return a `Transaction` object.      | `Promise<Transaction>`                    |
-
-**Transaction methods**
-
-| Method                    | Description               | Return                               |
-| ------------------------- | ------------------------- | ------------------------------------ |
-| `run(query, parameters?)` | Execute a query.          | `Promise<Record<string, unknown>[]>` |
-| `commit()`                | Commit the transaction.   | `Promise<Response>`                  |
-| `rollback()`              | Rollback the transaction. | `Promise<Response>`                  |
+| `beginTransaction(extra?)`           | Begin a transaction.                                        | `Promise<Response>`                     |
+| `commit()`                           | Commit the current transaction.                             | `Promise<Response>`                     |
+| `rollback()`                         | Rollback the current transaction.                           | `Promise<Response>`                     |
 
 **Example**
 
@@ -188,9 +182,9 @@ const rows = await client.query('MATCH (n:Person) RETURN n.name AS name, n.age A
 // rows = [{ name: 'Alice', age: 30 }, { name: 'Bob', age: 25 }]
 
 // Transaction example
-const tx = await client.beginTransaction();
-await tx.run('CREATE (n:Person {name: $name})', { name: 'Charlie' });
-await tx.commit(); // or tx.rollback()
+await client.beginTransaction();
+await client.query('CREATE (n:Person {name: $name})', { name: 'Charlie' });
+await client.commit(); // or client.rollback()
 ```
 
 ## :chains: Connection
