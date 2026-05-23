@@ -97,6 +97,14 @@ describe('Client', () => {
                 expect(records).toEqual([{ num: 1 }]);
             });
 
+            test('can start another transaction after commit', async () => {
+                await client.beginTransaction();
+                await client.commit();
+                const beginResp = await client.beginTransaction();
+                expect(beginResp.isSuccess).toBe(true);
+                await client.rollback();
+            });
+
             test('committed writes are visible after commit', async () => {
                 const label = `ClientTestNode_${Date.now()}`;
                 await client.beginTransaction();
@@ -124,6 +132,14 @@ describe('Client', () => {
                 await client.rollback();
                 const records = await client.query('RETURN 1 AS num');
                 expect(records).toEqual([{ num: 1 }]);
+            });
+
+            test('can start another transaction after rollback', async () => {
+                await client.beginTransaction();
+                await client.rollback();
+                const beginResp = await client.beginTransaction();
+                expect(beginResp.isSuccess).toBe(true);
+                await client.rollback();
             });
 
             test('rolled-back writes are not persisted', async () => {
