@@ -2,33 +2,6 @@ import { AProtocol } from '../protocol/AProtocol';
 import { Response } from '../protocol/Response';
 import AuthToken from '../protocol/AuthToken';
 
-export class Transaction {
-    private finished = false;
-
-    constructor(private protocol: AProtocol) {}
-
-    async run(query: string, parameters: Record<string, unknown> = {}): Promise<Record<string, unknown>[]> {
-        if (this.finished) throw new Error('Transaction already finished');
-        return collectRecords(this.protocol, query, parameters, {});
-    }
-
-    async commit(): Promise<Response> {
-        this.finished = true;
-        (this.protocol as any).commit();
-        const response = await this.protocol.getResponse();
-        if (response.isFailure) await reset(this.protocol, `COMMIT failed: ${JSON.stringify(response.content)}`);
-        return response;
-    }
-
-    async rollback(): Promise<Response> {
-        this.finished = true;
-        (this.protocol as any).rollback();
-        const response = await this.protocol.getResponse();
-        if (response.isFailure) await reset(this.protocol, `ROLLBACK failed: ${JSON.stringify(response.content)}`);
-        return response;
-    }
-}
-
 export class Client {
     private authenticated = false;
 
@@ -83,7 +56,7 @@ export class Client {
         return collectRecords(this.protocol, cypher, parameters, extra);
     }
 
-    async beginTransaction(extra: object = {}): Promise<Transaction> {
+    async beginTransaction(extra: object = {}): Promise<Response> {
         const proto = this.protocol as any;
         if (typeof proto.begin !== 'function') {
             throw new Error('Transactions require Bolt v3 or later');
@@ -95,7 +68,29 @@ export class Client {
             await reset(this.protocol, `BEGIN failed: ${JSON.stringify(response.content)}`);
         }
 
-        return new Transaction(this.protocol);
+        return response;
+    }
+
+    async commit(): Promise<Response> {
+        const proto = this.protocol as any;
+        if (typeof proto.commit !== 'function') {
+            throw new Error('Transactions require Bolt v3 or later');
+        }
+        proto.commit();
+        const response = await this.protocol.getResponse();
+        if (response.isFailure) await reset(this.protocol, `COMMIT failed: ${JSON.stringify(response.content)}`);
+        return response;
+    }
+
+    async rollback(): Promise<Response> {
+        const proto = this.protocol as any;
+        if (typeof proto.rollback !== 'function') {
+            throw new Error('Transactions require Bolt v3 or later');
+        }
+        proto.rollback();
+        const response = await this.protocol.getResponse();
+        if (response.isFailure) await reset(this.protocol, `ROLLBACK failed: ${JSON.stringify(response.content)}`);
+        return response;
     }
 }
 
