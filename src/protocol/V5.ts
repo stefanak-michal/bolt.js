@@ -1,7 +1,7 @@
 import { AProtocol } from './AProtocol';
 import { WithReset } from './mixins/v1/WithReset';
 import { WithRun } from './mixins/v3/WithRun';
-import { WithHello } from './mixins/v3/WithHello';
+import { WithHello } from './mixins/v4_1/WithHello';
 import { WithGoodbye } from './mixins/v3/WithGoodbye';
 import { WithBegin } from './mixins/v3/WithBegin';
 import { WithCommit } from './mixins/v3/WithCommit';
