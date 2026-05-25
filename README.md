@@ -200,6 +200,12 @@ const conn = new WebSocketChannel();
 const protocol = await Bolt.connect(conn, 'localhost', 7687);
 ```
 
+`Bolt.connect` can also be called with no arguments. It defaults to `WebSocketChannel`, host `127.0.0.1` and port `7687`:
+
+```typescript
+const protocol = await Bolt.connect();
+```
+
 ### Encrypted connections
 
 Pass `true` as the fourth argument to `Bolt.connect` to enable TLS:
