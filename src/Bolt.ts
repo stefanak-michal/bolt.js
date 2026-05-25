@@ -42,7 +42,12 @@ export class Bolt {
         { major: 3 },
     ];
 
-    static async connect(connection: IConnection, host: string, port: number, encrypted = false): Promise<AProtocol> {
+    static async connect(
+        connection: IConnection = new WebSocketChannel(),
+        host = '127.0.0.1',
+        port = 7687,
+        encrypted = false
+    ): Promise<AProtocol> {
         await connection.connect(host, port, encrypted);
 
         const versionProposals = Bolt.encodeVersionProposals();
