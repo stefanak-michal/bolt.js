@@ -19,6 +19,8 @@ This library supports **Bolt <= 6**.
 - [DozerDB](https://dozerdb.org/)
 - [ONgDB](https://graphfoundation.org/ongdb/)
 
+_This library doesn't guarantee that each ecosystem has Bolt protocol implemented correctly._
+
 ## :white_check_mark: Requirements
 
 - Node.js 18+
