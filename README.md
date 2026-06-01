@@ -2,6 +2,12 @@
 
 JavaScript/TypeScript library for communication with graph databases over WebSocket using the Bolt protocol specification. Bolt protocol was created by [Neo4j](https://neo4j.com/) and documentation is available at [https://www.neo4j.com/docs/bolt/current/](https://www.neo4j.com/docs/bolt/current/). This library is aimed to be low level, support all available versions and keep up with protocol messages architecture and specifications.
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Z8Z5ABMLW)
+
+[![NPM Version](https://img.shields.io/npm/v/%40stefanak-michal%2Fbolt-protocol)](https://www.npmjs.com/package/@stefanak-michal/bolt-protocol)
+[![GitHub commits since latest release](https://img.shields.io/github/commits-since/stefanak-michal/bolt.js/latest?cacheSeconds=0)](https://github.com/stefanak-michal/bolt.js/releases/latest)
+[![NPM Downloads](https://img.shields.io/npm/dw/%40stefanak-michal%2Fbolt-protocol)](https://www.npmjs.com/package/@stefanak-michal/bolt-protocol)
+
 :warning: This project was made as alternative for Neo4j official library which by how it's structured is vendor-locked without support for older bolt versions.
 
 ## :label: Version support
