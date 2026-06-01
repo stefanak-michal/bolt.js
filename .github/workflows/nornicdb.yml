@@ -13,7 +13,7 @@ jobs:
 
     services:
       nornicdb:
-        image: timothyswt/nornicdb-amd64-cpu
+        image: timothyswt/nornicdb-amd64-cpu:v1.0.45
         ports:
           - 7687:7687
           - 7474:7474
