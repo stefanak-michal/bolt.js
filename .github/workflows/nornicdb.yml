@@ -5,6 +5,9 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
     branches: [master]
 
+permissions:
+  contents: read
+
 jobs:
   nornicdb-tests:
     if: ${{ github.event.pull_request.draft == false }}
