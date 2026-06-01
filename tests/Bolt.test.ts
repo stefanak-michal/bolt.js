@@ -10,7 +10,9 @@ afterEach(() => {
 test('connect() uses default WebSocketChannel, host and port', async () => {
     const connectSpy = jest.spyOn(WebSocketChannel.prototype, 'connect').mockResolvedValue();
     const writeSpy = jest.spyOn(WebSocketChannel.prototype, 'write').mockImplementation(() => undefined);
-    const setHandshakeDoneSpy = jest.spyOn(WebSocketChannel.prototype, 'setHandshakeDone').mockImplementation(() => undefined);
+    const setHandshakeDoneSpy = jest
+        .spyOn(WebSocketChannel.prototype, 'setHandshakeDone')
+        .mockImplementation(() => undefined);
 
     jest.spyOn(WebSocketChannel.prototype, 'readRaw').mockResolvedValue(new Uint8Array([0, 0, 0, 6]));
 

@@ -6,10 +6,15 @@ import IStructure from '../IStructure';
 export default class UnboundRelationship implements IStructure {
     readonly signature = 0x72;
 
-    constructor(
-        public readonly id: number | bigint,
-        public readonly type: string,
-        public readonly properties: Record<string, unknown>,
-        public readonly elementId: string
-    ) {}
+    public readonly id!: number | bigint;
+    public readonly type!: string;
+    public readonly properties!: Record<string, unknown>;
+    public readonly elementId!: string;
+
+    constructor(id: number | bigint, type: string, properties: Record<string, unknown>, elementId: string) {
+        this.id = id;
+        this.type = type;
+        this.properties = properties;
+        this.elementId = elementId;
+    }
 }

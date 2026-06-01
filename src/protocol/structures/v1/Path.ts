@@ -8,9 +8,13 @@ import UnboundRelationship from './UnboundRelationship';
 export default class Path implements IStructure {
     readonly signature = 0x50;
 
-    constructor(
-        public readonly nodes: Node[],
-        public readonly rels: UnboundRelationship[],
-        public readonly indices: number[]
-    ) {}
+    public readonly nodes!: Node[];
+    public readonly rels!: UnboundRelationship[];
+    public readonly indices!: number[];
+
+    constructor(nodes: Node[], rels: UnboundRelationship[], indices: number[]) {
+        this.nodes = nodes;
+        this.rels = rels;
+        this.indices = indices;
+    }
 }

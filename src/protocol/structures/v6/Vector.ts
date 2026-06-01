@@ -6,5 +6,11 @@ import IStructure from '../IStructure';
 export default class Vector implements IStructure {
     readonly signature = 0x56;
 
-    constructor(public readonly data: number[]) {}
+    public readonly type_marker!: number[];
+    public readonly data!: number[];
+
+    constructor(type_marker: number[], data: number[]) {
+        this.type_marker = type_marker;
+        this.data = data;
+    }
 }

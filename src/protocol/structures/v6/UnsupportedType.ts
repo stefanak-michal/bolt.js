@@ -6,10 +6,20 @@ import IStructure from '../IStructure';
 export default class UnsupportedType implements IStructure {
     readonly signature = 0x3f;
 
+    public readonly name!: string;
+    public readonly minimum_protocol_major!: number;
+    public readonly minimum_protocol_minor!: number;
+    public readonly extra!: Record<string, unknown>;
+
     constructor(
-        public readonly name: string,
-        public readonly minimum_protocol_major: number,
-        public readonly minimum_protocol_minor: number,
-        public readonly extra: Record<string, unknown>
-    ) {}
+        name: string,
+        minimum_protocol_major: number,
+        minimum_protocol_minor: number,
+        extra: Record<string, unknown>
+    ) {
+        this.name = name;
+        this.minimum_protocol_major = minimum_protocol_major;
+        this.minimum_protocol_minor = minimum_protocol_minor;
+        this.extra = extra;
+    }
 }
