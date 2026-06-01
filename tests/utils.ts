@@ -18,7 +18,7 @@ export async function connect() {
         const helloResp = await protocol.getResponse();
         if (helloResp.isFailure) throw new Error(`HELLO failed: ${JSON.stringify(helloResp.content)}`);
 
-        p.logon({ scheme: 'basic', principal: USER, credentials: PASS });
+        p.logon({ scheme: AUTH_SCHEME, principal: USER, credentials: PASS });
         const logonResp = await protocol.getResponse();
         if (logonResp.isFailure) throw new Error(`LOGON failed: ${JSON.stringify(logonResp.content)}`);
     } else {
