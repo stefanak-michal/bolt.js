@@ -1,10 +1,11 @@
 import { Bolt } from '../src/Bolt';
 import { WebSocketChannel } from '../src/connection/WebSocketChannel';
 
-export const HOST = 'localhost';
-export const PORT = 7687;
-export const USER = 'neo4j';
-export const PASS = 'nothing123';
+export const HOST = process.env.BOLT_HOST ?? 'localhost';
+export const PORT = parseInt(process.env.BOLT_PORT ?? '7687', 10);
+export const USER = process.env.BOLT_USER ?? 'neo4j';
+export const PASS = process.env.BOLT_PASSWORD ?? 'nothing123';
+export const AUTH_SCHEME = process.env.BOLT_AUTH_SCHEME ?? 'basic';
 
 export async function connect() {
     const conn = new WebSocketChannel();
