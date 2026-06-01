@@ -1,4 +1,5 @@
 import IStructure from '../IStructure';
+import { PackInteger } from '../../../packstream/decorators';
 
 /**
  * @link https://neo4j.com/docs/bolt/current/bolt/structure-semantics/#structure-localdatetime
@@ -6,8 +7,11 @@ import IStructure from '../IStructure';
 export default class LocalDateTime implements IStructure {
     readonly signature = 0x64;
 
-    constructor(
-        public readonly seconds: number | bigint,
-        public readonly nanoseconds: number | bigint
-    ) {}
+    @PackInteger public readonly seconds!: number | bigint;
+    @PackInteger public readonly nanoseconds!: number | bigint;
+
+    constructor(seconds: number | bigint, nanoseconds: number | bigint) {
+        this.seconds = seconds;
+        this.nanoseconds = nanoseconds;
+    }
 }

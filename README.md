@@ -29,6 +29,7 @@ _This library doesn't guarantee that each ecosystem has Bolt protocol implemente
 ## :floppy_disk: Installation
 
 Within your node.js project use following command:
+
 ```bash
 npm install @stefanak-michal/bolt-protocol
 ```
@@ -164,9 +165,9 @@ new Client(protocol: AProtocol)
 | `login(auth: AuthToken)`             | Authenticate. Automatically adapts to the protocol version. | `Promise<Response \| Response[] \| void>` |
 | `logout()`                           | Log out (Bolt 5.1+).                                        | `Promise<Response>`                       |
 | `query(cypher, parameters?, extra?)` | Execute a query and return all rows as arrays of values.    | `Promise<Record<string, unknown>[]>`      |
-| `beginTransaction(extra?)`           | Begin a transaction.                                        | `Promise<Response>`                     |
-| `commit()`                           | Commit the current transaction.                             | `Promise<Response>`                     |
-| `rollback()`                         | Rollback the current transaction.                           | `Promise<Response>`                     |
+| `beginTransaction(extra?)`           | Begin a transaction.                                        | `Promise<Response>`                       |
+| `commit()`                           | Commit the current transaction.                             | `Promise<Response>`                       |
+| `rollback()`                         | Rollback the current transaction.                           | `Promise<Response>`                       |
 
 **Example**
 
@@ -226,7 +227,7 @@ Server state is not reported by the server but is derived from received response
 | ------------------- | ---------------------------------------------- |
 | Null                | `null`                                         |
 | Boolean             | `boolean`                                      |
-| Integer             | `number` or `BigInt`                                       |
+| Integer             | `number` or `BigInt`                           |
 | Float               | `number`                                       |
 | String              | `string`                                       |
 | List                | `Array`                                        |
@@ -238,3 +239,21 @@ Server state is not reported by the server but is derived from received response
 | Date / Time etc.    | Temporal structure classes (`Date`, `Time`, …) |
 | Point               | `Point2D` / `Point3D` structure classes        |
 | Vector _(Bolt 6)_   | `Vector` structure class                       |
+
+### Integer vs Float
+
+JavaScript has a single `number` type, so the library infers the Bolt type automatically: a number with no decimal part is sent as **Integer**, a number with a decimal part is sent as **Float**.
+
+When you need to override this — for example, sending `5` as a Float or truncating `3.9` to an Integer — wrap the value in the provided helper classes:
+
+```typescript
+import { Integer, Float } from '@stefanak-michal/bolt-protocol';
+
+// Sent as Bolt Float even though the value has no decimal part
+protocol.run('CREATE (n:Node {x: $x})', { x: new Float(5) });
+
+// Sent as Bolt Integer — decimal part is truncated
+protocol.run('CREATE (n:Node {count: $count})', { count: new Integer(3.9) });
+```
+
+These wrappers work anywhere a value is accepted: query parameters, list elements, dictionary values, and nested structures.

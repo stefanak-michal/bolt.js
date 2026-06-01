@@ -31,3 +31,9 @@ export { default as ServerState } from './enum/ServerState';
 
 // High-level helper
 export { Client } from './helpers/Client';
+
+// Pack type decorators for custom structures
+export { PackFloat, PackInteger } from './packstream/decorators';
+
+// Explicit int/float wrappers for query parameters and ad-hoc values
+export { Integer, Float } from './packstream/types';

@@ -1,4 +1,6 @@
 import IStructure from '../../protocol/structures/IStructure';
+import { getFieldPackType } from '../decorators';
+import { Float, Integer } from '../types';
 
 const TEXT_ENCODER = new TextEncoder();
 
@@ -22,6 +24,8 @@ export class Packer {
         if (typeof value === 'number') return this.packNumber(value);
         if (typeof value === 'string') return this.packString(value);
         if (value instanceof Uint8Array) return this.packBytes(value);
+        if (value instanceof Float) return this.packFloat64(value.value);
+        if (value instanceof Integer) return this.packInt(value.value);
         if (Array.isArray(value)) return this.packList(value);
         if (value && typeof value === 'object' && 'signature' in value) return this.packStructure(value as IStructure);
         if (typeof value === 'object') return this.packDict(value as Record<string, unknown>);
@@ -30,7 +34,10 @@ export class Packer {
 
     private packNumber(n: number): Uint8Array {
         if (Number.isInteger(n)) return this.packInt(n);
-        // float64
+        return this.packFloat64(n);
+    }
+
+    private packFloat64(n: number): Uint8Array {
         const buf = new ArrayBuffer(9);
         const view = new DataView(buf);
         view.setUint8(0, 0xc1);
@@ -39,6 +46,7 @@ export class Packer {
     }
 
     private packInt(n: number): Uint8Array {
+        n = Math.trunc(n);
         if (n >= -16 && n <= 127) {
             return new Uint8Array([n & 0xff]); // TINY_INT
         }
@@ -179,8 +187,15 @@ export class Packer {
         return concat([
             this.packStructHeader(Object.keys(s).length - 1, s.signature),
             ...Object.entries(s)
-                .filter(v => v[0] !== 'signature')
-                .map(v => this.packValue(v[1])),
+                .filter(([k]) => k !== 'signature')
+                .map(([k, v]) => {
+                    if (typeof v === 'number') {
+                        const packType = getFieldPackType(s, k);
+                        if (packType === 'float') return this.packFloat64(v);
+                        if (packType === 'integer') return this.packInt(v);
+                    }
+                    return this.packValue(v);
+                }),
         ]);
     }
 

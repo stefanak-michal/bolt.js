@@ -1,39 +1,9 @@
-import { Bolt } from '../src/Bolt';
-import { WebSocketChannel } from '../src/connection/WebSocketChannel';
 import { jest, expect, test } from '@jest/globals';
 import Node from '../src/protocol/structures/v5/Node';
 import Relationship from '../src/protocol/structures/v5/Relationship';
-
-const HOST = 'localhost';
-const PORT = 7687;
-const USER = 'neo4j';
-const PASS = 'nothing123';
+import { connect } from './utils';
 
 jest.setTimeout(15000);
-
-async function connect() {
-    const conn = new WebSocketChannel();
-    const protocol = await Bolt.connect(conn, HOST, PORT);
-    const p = protocol as any;
-
-    if (typeof p.logon === 'function') {
-        // v5.1+: HELLO without auth, then LOGON
-        p.hello();
-        const helloResp = await protocol.getResponse();
-        if (helloResp.isFailure) throw new Error(`HELLO failed: ${JSON.stringify(helloResp.content)}`);
-
-        p.logon({ scheme: 'basic', principal: USER, credentials: PASS });
-        const logonResp = await protocol.getResponse();
-        if (logonResp.isFailure) throw new Error(`LOGON failed: ${JSON.stringify(logonResp.content)}`);
-    } else {
-        // v3/v4/v5.0: HELLO with auth
-        p.hello({ auth_token: { scheme: 'basic', principal: USER, credentials: PASS } });
-        const helloResp = await protocol.getResponse();
-        if (helloResp.isFailure) throw new Error(`HELLO failed: ${JSON.stringify(helloResp.content)}`);
-    }
-
-    return { protocol, conn };
-}
 
 test('create two nodes with relationship in transaction then rollback', async () => {
     const { protocol, conn } = await connect();
@@ -48,7 +18,7 @@ test('create two nodes with relationship in transaction then rollback', async ()
             name1: 'Alice',
             name2: 'Bob',
         });
-        p.pull({ n: -1 });
+        p.pull();
 
         const runResp = await protocol.getResponse();
         expect(runResp.isSuccess).toBe(true);
@@ -72,7 +42,7 @@ test('create two nodes with relationship in transaction then rollback', async ()
             name1: 'Alice',
             name2: 'Bob',
         });
-        p.pull({ n: -1 });
+        p.pull();
 
         const verifyRunResp = await protocol.getResponse();
         expect(verifyRunResp.isSuccess).toBe(true);
@@ -93,8 +63,8 @@ test('connect, authenticate, RETURN 1 as num', async () => {
     const p = protocol as any;
 
     try {
-        p.run('RETURN 1 as num', {}, {});
-        p.pull({ n: -1 });
+        p.run('RETURN 1 as num');
+        p.pull();
 
         const runResp = await protocol.getResponse();
         expect(runResp.isSuccess).toBe(true);

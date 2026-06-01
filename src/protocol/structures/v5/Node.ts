@@ -6,10 +6,15 @@ import IStructure from '../IStructure';
 export default class Node implements IStructure {
     readonly signature = 0x4e;
 
-    constructor(
-        public readonly id: number | bigint,
-        public readonly labels: string[],
-        public readonly properties: Record<string, unknown>,
-        public readonly elementId: string
-    ) {}
+    public readonly id!: number | bigint;
+    public readonly labels!: string[];
+    public readonly properties!: Record<string, unknown>;
+    public readonly elementId!: string;
+
+    constructor(id: number | bigint, labels: string[], properties: Record<string, unknown>, elementId: string) {
+        this.id = id;
+        this.labels = labels;
+        this.properties = properties;
+        this.elementId = elementId;
+    }
 }
