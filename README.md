@@ -85,7 +85,7 @@ The main `Bolt` class handles the initial handshake and returns the appropriate 
 | `pullAll`      | @see pull (Bolt 1/2)                                  |
 | `discardAll`   | @see discard (Bolt 1/2)                               |
 
-Multiple methods accept an `extra` argument. This argument can contain any key-value pairs defined by the Bolt specification. The content of `extra` changed across Neo4j versions — check the Bolt documentation for the specific version you are working with.
+Multiple methods accept an `extra` argument. This argument can contain any key-value pairs defined by the Bolt specification. The content of `extra` changed across Neo4j versions. Check the Bolt documentation for the specific version you are working with.
 
 ### Authentication
 
@@ -250,7 +250,7 @@ Server state is not reported by the server but is derived from received response
 
 JavaScript has a single `number` type, so the library infers the Bolt type automatically: a number with no decimal part is sent as **Integer**, a number with a decimal part is sent as **Float**.
 
-When you need to override this — for example, sending `5` as a Float or truncating `3.9` to an Integer — wrap the value in the provided helper classes:
+When you need to override this, for example, sending `5` as a Float or truncating `3.9` to an Integer, wrap the value in the provided helper classes:
 
 ```typescript
 import { Integer, Float } from '@stefanak-michal/bolt-protocol';
@@ -258,7 +258,7 @@ import { Integer, Float } from '@stefanak-michal/bolt-protocol';
 // Sent as Bolt Float even though the value has no decimal part
 protocol.run('CREATE (n:Node {x: $x})', { x: new Float(5) });
 
-// Sent as Bolt Integer — decimal part is truncated
+// Sent as Bolt Integer, decimal part is truncated
 protocol.run('CREATE (n:Node {count: $count})', { count: new Integer(3.9) });
 ```
 
