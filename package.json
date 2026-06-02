@@ -10,6 +10,7 @@
     "build": "webpack --mode production",
     "test": "jest --config jest.config.js",
     "test:bundle": "jest --config jest.bundle.config.js",
+    "test:client": "jest --config jest.config.js ./tests/helpers/Client.test.ts",
     "format": "prettier --write ."
   },
   "files": [

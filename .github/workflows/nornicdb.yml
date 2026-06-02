@@ -40,4 +40,4 @@ jobs:
           BOLT_USER: ''
           BOLT_PASSWORD: ''
           BOLT_VERSION: '4.4.4'
-        run: npx jest ./tests/helpers/Client.test.ts
+        run: npm run test:client

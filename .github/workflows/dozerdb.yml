@@ -1,4 +1,4 @@
-name: Client test with Memgraph
+name: Tests with DozerDB
 
 on:
   pull_request:
@@ -6,16 +6,22 @@ on:
     branches: [master]
 
 jobs:
-  memgraph-tests:
+  dozerdb-tests:
     if: ${{ github.event.pull_request.draft == false }}
     runs-on: ubuntu-latest
     name: Run Jest tests
 
     services:
-      memgraph:
-        image: memgraph/memgraph
+      dozerdb:
+        image: graphstack/dozerdb:latest
+        env:
+          NEO4J_AUTH: neo4j/nothing123
         ports:
           - 7687:7687
+          - 7474:7474
+        options: >-
+          --health-cmd "wget http://localhost:7474 || exit 1"
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -32,7 +38,7 @@ jobs:
         env:
           BOLT_HOST: localhost
           BOLT_PORT: 7687
-          BOLT_AUTH_SCHEME: none
-          BOLT_USER: ''
-          BOLT_PASSWORD: ''
+          BOLT_AUTH_SCHEME: basic
+          BOLT_USER: neo4j
+          BOLT_PASSWORD: nothing123
         run: npm run test:client

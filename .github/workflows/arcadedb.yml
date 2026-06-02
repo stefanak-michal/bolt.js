@@ -40,4 +40,4 @@ jobs:
           BOLT_AUTH_SCHEME: basic
           BOLT_USER: root
           BOLT_PASSWORD: playwithdata
-        run: npx jest ./tests/helpers/Client.test.ts
+        run: npm run test:client
