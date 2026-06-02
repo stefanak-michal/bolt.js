@@ -7,14 +7,13 @@ on:
 
 jobs:
   nornicdb-tests:
-    # Temporarily disable the workflow until NornicDB add websocket support
-    if: false
+    if: ${{ github.event.pull_request.draft == false }}
     runs-on: ubuntu-latest
     name: Run Jest tests
 
     services:
       nornicdb:
-        image: timothyswt/nornicdb-amd64-cpu
+        image: timothyswt/nornicdb-amd64-cpu:latest
         ports:
           - 7687:7687
           - 7474:7474
