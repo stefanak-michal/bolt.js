@@ -62,24 +62,6 @@ The main `Bolt` class handles the initial handshake and returns the appropriate 
 | -------------- | ----------------------------------------------------------------------------------------------------- | ----------- |
 | `Bolt.connect` | Static factory. Creates a connection, executes the handshake and returns a protocol version instance. | `AProtocol` |
 
-**`Bolt.connect` arguments**
-
-| Argument     | Type          | Default                    | Description                                                      |
-| ------------ | ------------- | -------------------------- | ---------------------------------------------------------------- |
-| `connection` | `IConnection` | `new WebSocketChannel()`   | Transport channel. Provide a custom implementation if needed.    |
-| `uri`        | `string`      | `bolt://localhost:7687`    | Full connection URI including scheme, host, and optional port.   |
-
-**URI schemes**
-
-| Scheme      | Encryption                       | Notes              |
-| ----------- | -------------------------------- | ------------------ |
-| `bolt`      | No                               | Default            |
-| `bolt+s`    | Yes (CA-signed certificates)     |                    |
-| `bolt+ssc`  | Yes (CA and self-signed)         |                    |
-| `neo4j`     | No                               | Routing-aware      |
-| `neo4j+s`   | Yes (CA-signed certificates)     | Default for Aura   |
-| `neo4j+ssc` | Yes (CA and self-signed)         |                    |
-
 **Protocol class**
 
 | Method         | Description                                           |
@@ -132,7 +114,7 @@ _`run` executes a query in an auto-commit transaction if no explicit transaction
 import { Bolt } from 'bolt.js';
 
 // Connect and negotiate the protocol version
-// Defaults to WebSocketChannel and uri bolt://localhost:7687
+// Defaults to WebSocketChannel and uri bolt://127.0.0.1:7687
 const protocol = await Bolt.connect();
 
 // Initialize connection with the server
@@ -194,7 +176,7 @@ new Client(protocol: AProtocol)
 **Example**
 
 ```typescript
-import { Bolt, WebSocketChannel, Client } from 'bolt.js';
+import { Bolt, Client } from 'bolt.js';
 
 const protocol = await Bolt.connect();
 const client = new Client(protocol);
@@ -208,33 +190,6 @@ const rows = await client.query('MATCH (n:Person) RETURN n.name AS name, n.age A
 await client.beginTransaction();
 await client.query('CREATE (n:Person {name: $name})', { name: 'Charlie' });
 await client.commit(); // or client.rollback()
-```
-
-## :chains: Connection
-
-`Bolt.connect` accepts a connection object that implements `IConnection`. The library provides one built-in implementation.
-
-**`WebSocketChannel`**
-
-Uses the WebSocket protocol, which makes it compatible with browsers as well as Node.js. It handles Bolt message framing (chunking and dechunking) internally.
-
-```typescript
-const conn = new WebSocketChannel();
-const protocol = await Bolt.connect(conn, 'bolt://localhost:7687');
-```
-
-`Bolt.connect` can also be called with no arguments. It defaults to `WebSocketChannel` and URI `bolt://localhost:7687`:
-
-```typescript
-const protocol = await Bolt.connect();
-```
-
-### Encrypted connections
-
-Use a URI scheme that implies encryption. See the URI schemes table in the [Available methods](#available-methods) section for the full list.
-
-```typescript
-const protocol = await Bolt.connect(conn, 'neo4j+s://mydb.databases.neo4j.io');
 ```
 
 ## :vertical_traffic_light: Server state

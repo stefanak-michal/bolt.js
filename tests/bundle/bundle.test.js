@@ -1,6 +1,7 @@
 const { Bolt, WebSocketChannel, Client } = require('../../dist/bolt.js');
 
-const URI = process.env.BOLT_URI ?? 'bolt://localhost:7687';
+const HOST = process.env.BOLT_HOST ?? 'localhost';
+const PORT = parseInt(process.env.BOLT_PORT ?? '7687', 10);
 const AUTH = {
     scheme: process.env.BOLT_AUTH_SCHEME ?? 'basic',
     principal: process.env.BOLT_USER ?? 'neo4j',
@@ -14,7 +15,7 @@ let client;
 
 beforeEach(async () => {
     conn = new WebSocketChannel();
-    const protocol = await Bolt.connect(conn, URI);
+    const protocol = await Bolt.connect(conn, HOST, PORT);
     client = new Client(protocol);
     await client.login(AUTH);
 });

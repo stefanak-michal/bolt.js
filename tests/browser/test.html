@@ -9,7 +9,8 @@
         <script>
             (async function () {
                 const params = new URLSearchParams(location.search);
-                const uri = params.get('uri') || 'bolt://localhost:7687';
+                const host = params.get('host') || 'localhost';
+                const port = parseInt(params.get('port') || '7687', 10);
                 const user = params.get('user') || 'neo4j';
                 const password = params.get('password') || '';
                 const scheme = params.get('scheme') || 'basic';
@@ -17,7 +18,7 @@
                 try {
                     const { Bolt, WebSocketChannel, Client } = BoltDriver;
                     const conn = new WebSocketChannel();
-                    const protocol = await Bolt.connect(conn, uri);
+                    const protocol = await Bolt.connect(conn, host, port);
                     const client = new Client(protocol);
                     await client.login({ scheme, principal: user, credentials: password });
                     const records = await client.query('RETURN 1 AS num');

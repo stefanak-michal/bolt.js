@@ -54,13 +54,6 @@ class Dechunker {
     }
 }
 
-const URI_PATTERN = /^(?:neo4j\+ssc|neo4j\+s|neo4j|bolt\+ssc|bolt\+s|bolt):\/\/[^:]+:\d+(?:\?.*)?$/;
-
-function resolveWebSocketUrl(uri: string, port: number, encrypted: boolean): string {
-    if (URI_PATTERN.test(uri)) return uri;
-    return `${encrypted ? 'wss' : 'ws'}://${uri}:${port}`;
-}
-
 export class WebSocketChannel implements IConnection {
     private ws: WebSocket | null = null;
     private dechunker = new Dechunker();
@@ -81,9 +74,9 @@ export class WebSocketChannel implements IConnection {
         };
     }
 
-    connect(uri: string, ...rest: unknown[]): Promise<void> {
-        const [port = 7687, encrypted = false] = rest as [number?, boolean?];
-        const url = resolveWebSocketUrl(uri, port, encrypted);
+    connect(host: string, port: number, encrypted = false): Promise<void> {
+        const scheme = encrypted ? 'wss' : 'ws';
+        const url = `${scheme}://${host}:${port}`;
 
         return new Promise((resolve, reject) => {
             this.ws = new WebSocket(url);
