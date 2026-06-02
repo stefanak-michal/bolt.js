@@ -5,9 +5,6 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
     branches: [master]
 
-permissions:
-  contents: read
-
 jobs:
   nornicdb-tests:
     if: ${{ github.event.pull_request.draft == false }}
@@ -16,7 +13,7 @@ jobs:
 
     services:
       nornicdb:
-        image: timothyswt/nornicdb-amd64-cpu:v1.0.45
+        image: timothyswt/nornicdb-amd64-cpu:latest
         ports:
           - 7687:7687
           - 7474:7474
