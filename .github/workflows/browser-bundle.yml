@@ -42,8 +42,6 @@ jobs:
 
       - name: Run browser bundle test
         env:
-          BOLT_HOST: localhost
-          BOLT_PORT: 7687
           BOLT_AUTH_SCHEME: basic
           BOLT_USER: neo4j
           BOLT_PASSWORD: nothing123

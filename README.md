@@ -111,13 +111,11 @@ _`run` executes a query in an auto-commit transaction if no explicit transaction
 ### Example
 
 ```typescript
-import { Bolt, WebSocketChannel } from 'bolt.js';
-
-// Create a connection
-const conn = new WebSocketChannel();
+import { Bolt } from 'bolt.js';
 
 // Connect and negotiate the protocol version
-const protocol = await Bolt.connect(conn, '127.0.0.1', 7687);
+// Defaults to WebSocketChannel and uri bolt://127.0.0.1:7687
+const protocol = await Bolt.connect();
 
 // Initialize connection with the server
 let response = await protocol.hello({ user_agent: 'my-app/1.0' });
@@ -178,11 +176,9 @@ new Client(protocol: AProtocol)
 **Example**
 
 ```typescript
-import { Bolt, WebSocketChannel, Client } from 'bolt.js';
+import { Bolt, Client } from 'bolt.js';
 
-const conn = new WebSocketChannel();
-const protocol = await Bolt.connect(conn, '127.0.0.1', 7687);
-
+const protocol = await Bolt.connect();
 const client = new Client(protocol);
 await client.login({ scheme: 'basic', principal: 'neo4j', credentials: 'neo4j' });
 
@@ -194,33 +190,6 @@ const rows = await client.query('MATCH (n:Person) RETURN n.name AS name, n.age A
 await client.beginTransaction();
 await client.query('CREATE (n:Person {name: $name})', { name: 'Charlie' });
 await client.commit(); // or client.rollback()
-```
-
-## :chains: Connection
-
-`Bolt.connect` accepts a connection object that implements `IConnection`. The library provides one built-in implementation.
-
-**`WebSocketChannel`**
-
-Uses the WebSocket protocol, which makes it compatible with browsers as well as Node.js. It handles Bolt message framing (chunking and dechunking) internally.
-
-```typescript
-const conn = new WebSocketChannel();
-const protocol = await Bolt.connect(conn, 'localhost', 7687);
-```
-
-`Bolt.connect` can also be called with no arguments. It defaults to `WebSocketChannel`, host `127.0.0.1` and port `7687`:
-
-```typescript
-const protocol = await Bolt.connect();
-```
-
-### Encrypted connections
-
-Pass `true` as the fourth argument to `Bolt.connect` to enable TLS:
-
-```typescript
-const protocol = await Bolt.connect(conn, 'mydb.databases.neo4j.io', 7687, true);
 ```
 
 ## :vertical_traffic_light: Server state
