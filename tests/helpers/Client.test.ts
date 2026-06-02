@@ -60,7 +60,7 @@ describe('Client', () => {
         });
     });
 
-    describe('beginTransaction()', () => {
+    (VERSION && parseInt(VERSION.split('.')[0], 10) < 3 ? describe.skip : describe)('beginTransaction()', () => {
         test('returns a successful response', async () => {
             const resp = await client.beginTransaction();
             expect(resp.isSuccess).toBe(true);
