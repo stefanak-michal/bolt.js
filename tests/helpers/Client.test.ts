@@ -3,8 +3,7 @@ import { WebSocketChannel } from '../../src/connection/WebSocketChannel';
 import { Client } from '../../src/helpers/Client';
 import { jest, expect, describe, test, beforeEach, afterEach } from '@jest/globals';
 
-const HOST = process.env.BOLT_HOST ?? 'localhost';
-const PORT = parseInt(process.env.BOLT_PORT ?? '7687', 10);
+const URI = process.env.BOLT_URI ?? 'bolt://localhost:7687';
 const AUTH = {
     scheme: process.env.BOLT_AUTH_SCHEME ?? 'basic',
     principal: process.env.BOLT_USER ?? 'neo4j',
@@ -24,7 +23,7 @@ describe('Client', () => {
             const [major, minor = 0, range = 0] = VERSION.split('.').map(Number);
             Bolt.versions = [{ major, minor, range }];
         }
-        const protocol = await Bolt.connect(conn, HOST, PORT);
+        const protocol = await Bolt.connect(new WebSocketChannel(), URI);
         client = new Client(protocol);
         await client.login(AUTH);
     });

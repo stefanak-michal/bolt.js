@@ -62,6 +62,24 @@ The main `Bolt` class handles the initial handshake and returns the appropriate 
 | -------------- | ----------------------------------------------------------------------------------------------------- | ----------- |
 | `Bolt.connect` | Static factory. Creates a connection, executes the handshake and returns a protocol version instance. | `AProtocol` |
 
+**`Bolt.connect` arguments**
+
+| Argument     | Type          | Default                    | Description                                                      |
+| ------------ | ------------- | -------------------------- | ---------------------------------------------------------------- |
+| `connection` | `IConnection` | `new WebSocketChannel()`   | Transport channel. Provide a custom implementation if needed.    |
+| `uri`        | `string`      | `bolt://localhost:7687`    | Full connection URI including scheme, host, and optional port.   |
+
+**URI schemes**
+
+| Scheme      | Encryption                       | Notes              |
+| ----------- | -------------------------------- | ------------------ |
+| `bolt`      | No                               | Default            |
+| `bolt+s`    | Yes (CA-signed certificates)     |                    |
+| `bolt+ssc`  | Yes (CA and self-signed)         |                    |
+| `neo4j`     | No                               | Routing-aware      |
+| `neo4j+s`   | Yes (CA-signed certificates)     | Default for Aura   |
+| `neo4j+ssc` | Yes (CA and self-signed)         |                    |
+
 **Protocol class**
 
 | Method         | Description                                           |
@@ -111,13 +129,11 @@ _`run` executes a query in an auto-commit transaction if no explicit transaction
 ### Example
 
 ```typescript
-import { Bolt, WebSocketChannel } from 'bolt.js';
-
-// Create a connection
-const conn = new WebSocketChannel();
+import { Bolt } from 'bolt.js';
 
 // Connect and negotiate the protocol version
-const protocol = await Bolt.connect(conn, '127.0.0.1', 7687);
+// Defaults to WebSocketChannel and uri bolt://localhost:7687
+const protocol = await Bolt.connect();
 
 // Initialize connection with the server
 let response = await protocol.hello({ user_agent: 'my-app/1.0' });
@@ -180,9 +196,7 @@ new Client(protocol: AProtocol)
 ```typescript
 import { Bolt, WebSocketChannel, Client } from 'bolt.js';
 
-const conn = new WebSocketChannel();
-const protocol = await Bolt.connect(conn, '127.0.0.1', 7687);
-
+const protocol = await Bolt.connect();
 const client = new Client(protocol);
 await client.login({ scheme: 'basic', principal: 'neo4j', credentials: 'neo4j' });
 
@@ -206,10 +220,10 @@ Uses the WebSocket protocol, which makes it compatible with browsers as well as 
 
 ```typescript
 const conn = new WebSocketChannel();
-const protocol = await Bolt.connect(conn, 'localhost', 7687);
+const protocol = await Bolt.connect(conn, 'bolt://localhost:7687');
 ```
 
-`Bolt.connect` can also be called with no arguments. It defaults to `WebSocketChannel`, host `127.0.0.1` and port `7687`:
+`Bolt.connect` can also be called with no arguments. It defaults to `WebSocketChannel` and URI `bolt://localhost:7687`:
 
 ```typescript
 const protocol = await Bolt.connect();
@@ -217,10 +231,10 @@ const protocol = await Bolt.connect();
 
 ### Encrypted connections
 
-Pass `true` as the fourth argument to `Bolt.connect` to enable TLS:
+Use a URI scheme that implies encryption. See the URI schemes table in the [Available methods](#available-methods) section for the full list.
 
 ```typescript
-const protocol = await Bolt.connect(conn, 'mydb.databases.neo4j.io', 7687, true);
+const protocol = await Bolt.connect(conn, 'neo4j+s://mydb.databases.neo4j.io');
 ```
 
 ## :vertical_traffic_light: Server state

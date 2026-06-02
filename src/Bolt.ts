@@ -42,13 +42,17 @@ export class Bolt {
         { major: 3 },
     ];
 
+    /**
+     * @param connection WebSocket channel to use for the connection.
+     * @param uri Full connection URI, e.g. `bolt://localhost:7687` or `neo4j+s://host:port`.
+     * @param rest Pass a full URI instead of separate host, port, and encrypted arguments.
+     */
     static async connect(
         connection: IConnection = new WebSocketChannel(),
-        host = '127.0.0.1',
-        port = 7687,
-        encrypted = false
+        uri = 'bolt://localhost:7687',
+        ...rest: unknown[]
     ): Promise<AProtocol> {
-        await connection.connect(host, port, encrypted);
+        await connection.connect(uri, ...rest);
 
         const versionProposals = Bolt.encodeVersionProposals();
 

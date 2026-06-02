@@ -7,7 +7,7 @@ afterEach(() => {
     jest.restoreAllMocks();
 });
 
-test('connect() uses default WebSocketChannel, host and port', async () => {
+test('connect() uses default WebSocketChannel and URI', async () => {
     const connectSpy = jest.spyOn(WebSocketChannel.prototype, 'connect').mockResolvedValue();
     const writeSpy = jest.spyOn(WebSocketChannel.prototype, 'write').mockImplementation(() => undefined);
     const setHandshakeDoneSpy = jest
@@ -19,7 +19,7 @@ test('connect() uses default WebSocketChannel, host and port', async () => {
     const protocol = await Bolt.connect();
 
     expect(protocol).toBeInstanceOf(V6);
-    expect(connectSpy).toHaveBeenCalledWith('127.0.0.1', 7687, false);
+    expect(connectSpy).toHaveBeenCalledWith('bolt://localhost:7687');
     expect(writeSpy).toHaveBeenCalledTimes(1);
     expect(setHandshakeDoneSpy).toHaveBeenCalledTimes(1);
 });
