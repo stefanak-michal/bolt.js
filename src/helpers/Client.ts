@@ -16,20 +16,20 @@ export class Client {
         if (typeof proto.logon === 'function') {
             proto.hello();
             const helloResp = await this.protocol.getResponse();
-            if (helloResp.isFailure) await reset(this.protocol, `HELLO failed: ${JSON.stringify(helloResp.content)}`);
+            if (helloResp.isFailure) throw new Error(`HELLO failed: ${JSON.stringify(helloResp.content)}`);
             proto.logon(auth);
             const logonResp = await this.protocol.getResponse();
-            if (logonResp.isFailure) await reset(this.protocol, `LOGON failed: ${JSON.stringify(logonResp.content)}`);
+            if (logonResp.isFailure) throw new Error(`LOGON failed: ${JSON.stringify(logonResp.content)}`);
             return [helloResp, logonResp];
         } else if (typeof proto.hello === 'function') {
             proto.hello({ auth_token: auth });
             const helloResp = await this.protocol.getResponse();
-            if (helloResp.isFailure) await reset(this.protocol, `HELLO failed: ${JSON.stringify(helloResp.content)}`);
+            if (helloResp.isFailure) throw new Error(`HELLO failed: ${JSON.stringify(helloResp.content)}`);
             return helloResp;
         } else if (typeof proto.init === 'function') {
             proto.init(null, auth);
             const initResp = await this.protocol.getResponse();
-            if (initResp.isFailure) await reset(this.protocol, `INIT failed: ${JSON.stringify(initResp.content)}`);
+            if (initResp.isFailure) throw new Error(`INIT failed: ${JSON.stringify(initResp.content)}`);
             return initResp;
         }
 
@@ -41,8 +41,7 @@ export class Client {
         if (typeof proto.logoff === 'function') {
             proto.logoff();
             const logoffResp = await this.protocol.getResponse();
-            if (logoffResp.isFailure)
-                await reset(this.protocol, `LOGOFF failed: ${JSON.stringify(logoffResp.content)}`);
+            if (logoffResp.isFailure) throw new Error(`LOGOFF failed: ${JSON.stringify(logoffResp.content)}`);
             return logoffResp;
         }
         throw new Error('Protocol does not support LOGOFF');
